@@ -1,39 +1,60 @@
 FROM ubuntu
+
 MAINTAINER LionHeart <LionHeart_fxc@163.com>
-ENV REFRESHED_AT 2015-04-19
-RUN apt-get update
-RUN apt-get install -y make
-RUN apt-get install -y libc6
-RUN apt-get install -y libc6-dev
-RUN apt-get install -y g++
-RUN apt-get install -y build-essential
-RUN apt-get install unzip
-RUN apt-get -y install libpcre3 libpcre3-dev
-RUN apt-get -y install ruby zlib1g zlib1g.dev
-RUN mkdir -p /home/fastdfs
-RUN mkdir -p /home/fastdfs_file/data
-RUN ln -s /home/fastdfs_file/data /home/fastdfs_file/data/M00
-WORKDIR /home/fastdfs
-ADD file/fastdfs-5.05.tar.gz /home/fastdfs
-ADD file/libfastcommon-master.zip /home/fastdfs/
-ADD file/nginx-1.6.3.tar.gz /home/fastdfs
-ADD file/ngx_cache_purge-2.3.tar.gz /home/fastdfs
-RUN unzip libfastcommon-master.zip
-WORKDIR /home/fastdfs/libfastcommon-master
-RUN ./make.sh
-RUN ./make.sh install
-WORKDIR /home/fastdfs/fastdfs-5.05
-RUN ./make.sh
-RUN ./make.sh install
-WORKDIR /home/fastdfs/nginx-1.6.3
-RUN ./configure --add-module=/home/fastdfs/ngx_cache_purge-2.3
-RUN make
-RUN make install
-WORKDIR /etc/ld.so.conf.d/
-RUN touch libfastcommon.conf
-RUN echo "/usr/lib64/" >> libfastcommon.conf
-RUN /sbin/ldconfig -v
-RUN cp /home/fastdfs/fastdfs-5.05/conf/http.conf /etc/fdfs/
-RUN cp /home/fastdfs/fastdfs-5.05/conf/mime.types /etc/fdfs/
-WORKDIR /home/fastdfs/fastdfs-5.05
-EXPOSE 80
+
+ENV FASTDFS_PATH=/fastDFS \
+    FASTDFS_BASE_PATH=/data \
+    NGINX_VERSION=1.8.1 \
+    PCRE_VERSION=8.37 \
+    ZLIB_VERSION=1.2.8 \
+    OPENSSL_VERSION=1.0.2f
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    git \
+    make \
+	wget
+
+RUN mkdir -p ${FASTDFS_PATH}/libfastcommon \
+ && mkdir -p ${FASTDFS_PATH}/fastdfs \
+ && mkdir -p ${FASTDFS_PATH}/nginx \
+ && mkdir -p ${FASTDFS_PATH}/nginx_module \
+ && mkdir -p ${FASTDFS_PATH}/download \
+ && mkdir ${FASTDFS_BASE_PATH} \
+ && ln -s ${FASTDFS_BASE_PATH} ${FASTDFS_BASE_PATH}/M00
+
+RUN git clone https://github.com/happyfish100/libfastcommon.git ${FASTDFS_PATH}/libfastcommon \
+ && git clone https://github.com/happyfish100/fastdfs.git ${FASTDFS_PATH}/fastdfs \
+ && git clone https://github.com/happyfish100/fastdfs-nginx-module.git ${FASTDFS_PATH}/nginx_module \
+ && wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -P ${FASTDFS_PATH}/nginx \
+ && wget "http://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" -P ${FASTDFS_PATH}/download \
+ && wget "ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${PCRE_VERSION}.tar.gz" -P ${FASTDFS_PATH}/download \
+ && wget "http://zlib.net/zlib-${ZLIB_VERSION}.tar.gz" -P ${FASTDFS_PATH}/download \
+ && tar zxvf /fastDFS/nginx/nginx-${NGINX_VERSION}.tar.gz -C /fastDFS/nginx \
+ && tar zxvf /fastDFS/download/openssl-${OPENSSL_VERSION}.tar.gz -C /fastDFS/download \
+ && tar zxvf /fastDFS/download/pcre-${PCRE_VERSION}.tar.gz -C /fastDFS/download \
+ && tar zxvf /fastDFS/download/zlib-${ZLIB_VERSION}.tar.gz -C /fastDFS/download
+
+WORKDIR ${FASTDFS_PATH}/libfastcommon
+
+RUN ["/bin/bash", "-c", "./make.sh && ./make.sh install"]
+
+WORKDIR ${FASTDFS_PATH}/fastdfs
+
+RUN ["/bin/bash", "-c", "./make.sh && ./make.sh install"]
+
+WORKDIR ${FASTDFS_PATH}/nginx/nginx-${NGINX_VERSION}
+
+RUN ./configure --with-pcre=${FASTDFS_PATH}/download/pcre-${PCRE_VERSION} \
+                --with-zlib=${FASTDFS_PATH}/download/zlib-${ZLIB_VERSION} \
+                --with-openssl=${FASTDFS_PATH}/download/openssl-${OPENSSL_VERSION} \
+                --with-http_ssl_module \
+                --add-module=${FASTDFS_PATH}/nginx_module/src \
+ && make \
+ && make install
+ 
+RUN rm -rf /var/lib/apt/lists/* \
+ && rm -rf /fastDFS/*
+
+EXPOSE 23000 80
