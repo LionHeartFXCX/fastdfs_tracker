@@ -17,9 +17,10 @@ RUN mkdir -p ${FASTDFS_PATH}/libfastcommon \
 
 WORKDIR ${FASTDFS_PATH}/libfastcommon
 
-RUN git clone https://github.com/happyfish100/libfastcommon.git ${FASTDFS_PATH}/libfastcommon \
- && ["/bin/bash", "-c", "./make.sh && ./make.sh install"] \
- && rm -rf ${FASTDFS_PATH}/libfastcommon
+RUN /bin/bash -c 'git clone https://github.com/happyfish100/libfastcommon.git ${FASTDFS_PATH}/libfastcommon ;\
+  .${FASTDFS_PATH}/libfastcommon/make.sh ;\
+  .${FASTDFS_PATH}/libfastcommon/make.sh install ;\
+  rm -rf ${FASTDFS_PATH}/libfastcommon'
 
 WORKDIR ${FASTDFS_PATH}/fastdfs
 
