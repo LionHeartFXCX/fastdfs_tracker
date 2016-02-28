@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     git \
     make \
+    supervisor
  && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p ${FASTDFS_PATH}/libfastcommon \
