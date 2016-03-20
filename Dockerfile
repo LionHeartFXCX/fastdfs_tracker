@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -y \
     gcc \
     git \
     make \
-    supervisor \
  && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p ${FASTDFS_PATH}/libfastcommon \
@@ -29,5 +28,9 @@ RUN /bin/bash -c 'git clone https://github.com/happyfish100/fastdfs.git ${FASTDF
  ./make.sh ;\
  ./make.sh install ;\
  rm -rf ${FASTDFS_PATH}/fastdfs'
+ 
+ADD start.sh /usr/bin/
 
 EXPOSE 22122
+
+ENTRYPOINT ["/usr/bin/start.sh"]
