@@ -6,9 +6,8 @@ ENV FASTDFS_PATH=/fastDFS
 ENV FASTDFS_BASE_PATH=/data
 
 RUN apt-get update
-RUN apt-get install -y gcc 
+RUN apt-get install -y build-essential 
 RUN apt-get install -y git
-RUN apt-get install -y make
 
 RUN mkdir -p ${FASTDFS_PATH}/libfastcommon
 RUN mkdir -p ${FASTDFS_PATH}/fastdfs
