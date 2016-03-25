@@ -2,36 +2,31 @@ FROM ubuntu
 
 MAINTAINER LionHeart <LionHeart_fxc@163.com>
 
-ENV FASTDFS_PATH=/fastDFS \
-    FASTDFS_BASE_PATH=/data
-    
-ADD start.sh /usr/bin/
+ENV FASTDFS_PATH=/fastDFS
+ENV FASTDFS_BASE_PATH=/data
 
-RUN apt-get update && apt-get install -y \
-    gcc \
-    git \
-    make \
- && rm -rf /var/lib/apt/lists/*
+RUN apt-get update
+RUN apt-get install -y gcc 
+RUN apt-get install -y git
+RUN apt-get install -y make
 
-RUN mkdir -p ${FASTDFS_PATH}/libfastcommon \
- && mkdir -p ${FASTDFS_PATH}/fastdfs \
- && mkdir ${FASTDFS_BASE_PATH} \
- && chmod 777 /usr/bin/start.sh
+RUN mkdir -p ${FASTDFS_PATH}/libfastcommon
+RUN mkdir -p ${FASTDFS_PATH}/fastdfs
+RUN mkdir ${FASTDFS_BASE_PATH}
 
 WORKDIR ${FASTDFS_PATH}/libfastcommon
 
-RUN /bin/bash -c 'git clone https://github.com/happyfish100/libfastcommon.git ${FASTDFS_PATH}/libfastcommon ;\
-  ./make.sh ;\
-  ./make.sh install ;\
-  rm -rf ${FASTDFS_PATH}/libfastcommon'
+RUN ["/bin/bash", "-c", "./make.sh"]
+RUN ["/bin/bash", "-c", "/make.sh install"]
 
 WORKDIR ${FASTDFS_PATH}/fastdfs
 
-RUN /bin/bash -c 'git clone https://github.com/happyfish100/fastdfs.git ${FASTDFS_PATH}/fastdfs ;\
- ./make.sh ;\
- ./make.sh install ;\
- rm -rf ${FASTDFS_PATH}/fastdfs'
+RUN ["/bin/bash", "-c", "./make.sh"]
+RUN ["/bin/bash", "-c", "./make.sh install"]
 
 EXPOSE 22122
+
+ADD start.sh /usr/bin/
+RUN chmod 777 /usr/bin/start.sh
 
 ENTRYPOINT ["/usr/bin/start.sh"]
