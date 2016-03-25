@@ -14,6 +14,9 @@ RUN mkdir -p ${FASTDFS_PATH}/libfastcommon
 RUN mkdir -p ${FASTDFS_PATH}/fastdfs
 RUN mkdir ${FASTDFS_BASE_PATH}
 
+RUN git clone https://github.com/happyfish100/libfastcommon.git ${FASTDFS_PATH}/libfastcommon
+RUN git clone https://github.com/happyfish100/fastdfs.git ${FASTDFS_PATH}/fastdfs
+
 WORKDIR ${FASTDFS_PATH}/libfastcommon
 
 RUN ["/bin/bash", "-c", "./make.sh"]
