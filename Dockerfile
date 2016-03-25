@@ -20,7 +20,7 @@ RUN git clone https://github.com/happyfish100/fastdfs.git ${FASTDFS_PATH}/fastdf
 WORKDIR ${FASTDFS_PATH}/libfastcommon
 
 RUN ["/bin/bash", "-c", "./make.sh"]
-RUN ["/bin/bash", "-c", "/make.sh install"]
+RUN ["/bin/bash", "-c", "./make.sh install"]
 
 WORKDIR ${FASTDFS_PATH}/fastdfs
 
