@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     gcc \
     git \
     make \
- && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/* \
+ && apt-get clean
 
 ADD start.sh /usr/bin/
 
