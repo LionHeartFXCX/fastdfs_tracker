@@ -1,4 +1,4 @@
-FROM debain
+FROM debian
 
 MAINTAINER LionHeart <LionHeart_fxc@163.com>
 
