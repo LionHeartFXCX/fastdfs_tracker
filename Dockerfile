@@ -6,7 +6,7 @@ ENV FASTDFS_PATH=/fastDFS \
     FASTDFS_BASE_PATH=/data
 
 #get all the dependences
-RUN yum update && yum install -y \
+RUN yum update && yum -y install \
     gcc \
     git \
     make \
