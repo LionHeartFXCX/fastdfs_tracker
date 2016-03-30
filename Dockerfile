@@ -1,4 +1,4 @@
-FROM debian
+FROM centos
 
 MAINTAINER LionHeart <LionHeart_fxc@163.com>
 
@@ -6,11 +6,11 @@ ENV FASTDFS_PATH=/fastDFS \
     FASTDFS_BASE_PATH=/data
 
 #get all the dependences
-RUN apt-get update && apt-get install -y \
+RUN yum update && yum install -y \
     gcc \
     git \
     make \
- && rm -rf /var/lib/apt/lists/*
+ && yum clean all
 
 ADD start.sh /usr/bin/
 
