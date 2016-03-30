@@ -15,10 +15,10 @@ RUN apt-get update && apt-get install -y \
 ADD start.sh /usr/bin/
 
 #create the directory and change the make the start.sh executable
-RUN chmod 777 /usr/bin/start.sh
+RUN chmod 777 /usr/bin/start.sh \
  && mkdir -p ${FASTDFS_PATH}/libfastcommon \
  && mkdir -p ${FASTDFS_PATH}/fastdfs \
- && mkdir ${FASTDFS_BASE_PATH} \
+ && mkdir ${FASTDFS_BASE_PATH}
 
 #compile the libfastcommon
 WORKDIR ${FASTDFS_PATH}/libfastcommon
