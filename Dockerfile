@@ -1,4 +1,4 @@
-FROM debian
+FROM ubuntu
 
 MAINTAINER LionHeart <LionHeart_fxc@163.com>
 
@@ -13,11 +13,8 @@ RUN apt-get update && apt-get install -y \
  && rm -rf /var/lib/apt/lists/* \
  && apt-get clean
 
-ADD start.sh /usr/bin/
-
-#create the directory and change the make the start.sh executable
-RUN chmod 777 /usr/bin/start.sh \
- && mkdir -p ${FASTDFS_PATH}/libfastcommon \
+#create the dirs to store the files downloaded from internet
+RUN mkdir -p ${FASTDFS_PATH}/libfastcommon \
  && mkdir -p ${FASTDFS_PATH}/fastdfs \
  && mkdir ${FASTDFS_BASE_PATH}
 
@@ -38,5 +35,10 @@ RUN /bin/bash -c 'git clone https://github.com/happyfish100/fastdfs.git ${FASTDF
  rm -rf ${FASTDFS_PATH}/fastdfs'
 
 EXPOSE 22122
+
+ADD start.sh /usr/bin/
+
+#make the start.sh executable 
+RUN chmod 777 /usr/bin/start.sh
 
 ENTRYPOINT ["/usr/bin/start.sh"]
