@@ -1,4 +1,4 @@
-FROM centos
+FROM fedora
 
 MAINTAINER LionHeart <LionHeart_fxc@163.com>
 
