@@ -19,13 +19,13 @@ RUN git clone https://github.com/happyfish100/fastdfs.git ${FASTDFS_PATH}/fastdf
 
 WORKDIR ${FASTDFS_PATH}/libfastcommon
 
-RUN ./make.sh
-RUN ./make.sh install
+RUN ./make.sh \
+ && ./make.sh install
 
 WORKDIR ${FASTDFS_PATH}/fastdfs
 
-RUN ./make.sh
-RUN ./make.sh install
+RUN ./make.sh \
+ && ./make.sh install
 
 EXPOSE 22122
 
