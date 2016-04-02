@@ -1,7 +1,5 @@
 FROM ubuntu
 
-MAINTAINER LionHeart <LionHeart_fxc@163.com>
-
 ENV FASTDFS_PATH=/fastDFS \
     FASTDFS_BASE_PATH=/data
 
@@ -21,18 +19,18 @@ RUN mkdir -p ${FASTDFS_PATH}/libfastcommon \
 #compile the libfastcommon
 WORKDIR ${FASTDFS_PATH}/libfastcommon
 
-RUN /bin/bash -c 'git clone https://github.com/happyfish100/libfastcommon.git ${FASTDFS_PATH}/libfastcommon ;\
-  ./make.sh ;\
-  ./make.sh install ;\
-  rm -rf ${FASTDFS_PATH}/libfastcommon'
+RUN git clone https://github.com/happyfish100/libfastcommon.git ${FASTDFS_PATH}/libfastcommon \
+ && ./make.sh \
+ && ./make.sh install \
+ && rm -rf ${FASTDFS_PATH}/libfastcommon
 
 #compile the fastdfs
 WORKDIR ${FASTDFS_PATH}/fastdfs
 
-RUN /bin/bash -c 'git clone https://github.com/happyfish100/fastdfs.git ${FASTDFS_PATH}/fastdfs ;\
- ./make.sh ;\
- ./make.sh install ;\
- rm -rf ${FASTDFS_PATH}/fastdfs'
+RUN git clone https://github.com/happyfish100/fastdfs.git ${FASTDFS_PATH}/fastdfs \
+ && ./make.sh \
+ && ./make.sh install \
+ && rm -rf ${FASTDFS_PATH}/fastdfs
 
 EXPOSE 22122
 
@@ -42,3 +40,5 @@ ADD start.sh /usr/bin/
 RUN chmod 777 /usr/bin/start.sh
 
 ENTRYPOINT ["/usr/bin/start.sh"]
+
+MAINTAINER LionHeart <LionHeart_fxc@163.com>
