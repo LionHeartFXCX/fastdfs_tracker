@@ -26,16 +26,23 @@ done
 if [ $TIMES -gt 0 ]; then
     echo "the tracker node started successfully at $(date +%Y-%m-%d_%H:%M)"
 	
+	# give the detail log address
+	echo "please have a look at the log detail at $FASTDFS_LOG_FILE"
+	
+	# leave balnk lines to differ from next log.
+    echo
+    echo
+	
 	# make the container have foreground process(primary commond!)
     tail -F --pid=`cat $FASTDFS_BASE_PATH/data/fdfs_trackerd.pid` /dev/null
 # else print the error.
 else
     echo "the tracker node started failed at $(date +%Y-%m-%d_%H:%M)"
+	
+	# give the detail log address
+	echo "please have a look at the log detail at $FASTDFS_LOG_FILE"
+	
+	# leave balnk lines to differ from next log.
+    echo
+    echo
 fi
-
-# give the detail log address
-echo "please have a look at the log detail at $FASTDFS_LOG_FILE"
-
-# leave balnk lines to differ from next log.
-echo
-echo
